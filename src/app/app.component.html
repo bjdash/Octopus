@@ -1,0 +1,15 @@
+<div>
+  <div class="current-rate">
+    <span class="price">
+      {{tariffs[0]?.value_inc_vat}}
+    </span>
+    <span class="pence">p</span>
+  </div>
+  <div *ngFor="let tariff of tariffs" class="tariff">
+    <span class="time">{{tariff.valid_from|date:'h:mm a'}}</span>
+    <span class="price">{{tariff.value_inc_vat}} p</span>
+  </div>
+</div>
+
+
+<router-outlet></router-outlet>

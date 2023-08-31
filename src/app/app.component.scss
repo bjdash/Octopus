@@ -1,0 +1,38 @@
+.current-rate{
+  margin: auto;
+  width: 60vw;
+  height: 60vw;
+  border: 3px solid green;
+  padding: 10px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .price{
+    font-size: 4rem;
+  }
+  .pence{
+    font-size: 2rem;
+    margin-left: 10px;
+  }
+
+}
+
+.tariff {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: stretch;
+  font-size: 2rem;
+  margin-bottom: 10px;
+  padding: 5px;
+  box-sizing: border-box;
+  border: 1px solid red;
+  span{
+    flex: 1;
+  }
+  .time{
+    text-transform: lowercase;
+  }
+}
