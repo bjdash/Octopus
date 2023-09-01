@@ -8,6 +8,7 @@ import { Tariff } from './models';
 })
 export class AppComponent {
   tariffs: Tariff[] = [];
+  valueForMoney: '' | 'green' | 'orange' | 'red' = ''
   constructor() {
     this.getTariff();
   }
@@ -16,10 +17,6 @@ export class AppComponent {
     let now = new Date();
     if (now.getMinutes() >= 30) now.setMinutes(30, 0, 0)
     else now.setMinutes(0, 0, 0);
-
-    // let nextDay = new Date();
-    // nextDay.setUTCHours(nextDay.getDate() + 1);
-    // nextDay.setUTCHours(5, 0, 0, 0);
 
     const res = await fetch(
       `https://api.octopus.energy/v1/products/AGILE-FLEX-22-11-25/electricity-tariffs/E-1R-AGILE-FLEX-22-11-25-N/standard-unit-rates/?period_from=${now.toISOString()}`
@@ -36,7 +33,19 @@ export class AppComponent {
         }).map(t => {
           t.value_inc_vat = parseFloat(t.value_inc_vat.toFixed(2));
           return t
-        })
+        });
+
+      if (this.tariffs.length > 0) {
+        let current = this.tariffs[0].value_inc_vat;
+        this.valueForMoney = ''
+        if (current < 20) {
+          this.valueForMoney = 'green'
+        } else if (current < 27) {
+          this.valueForMoney = 'orange'
+        } else {
+          this.valueForMoney = 'red'
+        }
+      }
     } else {
       // Sometimes the API will fail!
       throw new Error("Request failed");

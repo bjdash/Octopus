@@ -1,18 +1,113 @@
-.current-rate{
-  margin: auto;
-  width: 60vw;
-  height: 60vw;
-  border: 3px solid green;
-  padding: 10px;
-  border-radius: 50%;
+.top-cont {
+  position: relative;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
 
-  .price{
-    font-size: 4rem;
+}
+
+.wave__container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.wave__circle {
+  position: absolute;
+  background-color: transparent;
+  border: 10px solid var(--circleColor);
+  border-radius: 50%;
+  box-shadow: inset var(--shadowShift) var(--shadowShift) var(--shadowBlur) rgba(55 84 170 / 0.2),
+    var(--shadowShift) var(--shadowShift) var(--shadowBlur) rgba(55 84 170 / 0.2),
+    inset calc(var(--shadowShift) * -1) calc(var(--shadowShift) * -1) var(--shadowBlur) rgba(255 255 255 / 1),
+    calc(var(--shadowShift) * -1) calc(var(--shadowShift) * -1) var(--shadowBlur) rgba(255 255 255 / 1);
+  filter: blur(3px);
+
+  animation-name: ripple;
+  animation-duration: 3s;
+  animation-timing-function: cubic-bezier(0, 0.2, 0.8, 1);
+  animation-iteration-count: infinite;
+}
+
+.wave__container .wave__circle:nth-child(2) {
+  animation-delay: -1s;
+}
+
+.wave__container .wave__circle:nth-child(3) {
+  animation-delay: -2s;
+}
+
+@keyframes ripple {
+  0% {
+    top: 50vw;
+    left: 50vw;
+    width: 0;
+    height: 0;
+    opacity: 1;
   }
-  .pence{
+
+  100% {
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vw;
+    opacity: 0;
+  }
+}
+
+@keyframes zoom {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+
+.current-rate {
+  margin: auto;
+  width: 60vw;
+  height: 60vw;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  background-color: #ffffffd1;
+  box-shadow: var(--shadowShift) 0 var(--shadowBlur) rgba(55 84 170 / 0.2), calc(var(--shadowShift) * -1) 0 var(--shadowBlur) rgba(255 255 255 / 1);
+
+  &.green {
+    color: green;
+    text-shadow: -2px 2px 10px #00ff005e;
+  }
+
+  &.orange {
+    color: orange;
+    text-shadow: -2px 2px 10px #ff8c005e;
+  }
+
+  &.red {
+    color: red;
+    text-shadow: -2px 2px 10px #ff00005e;
+  }
+
+  .price {
+    font-size: 4.5rem;
+  }
+
+  .pence {
     font-size: 2rem;
     margin-left: 10px;
   }
@@ -20,19 +115,23 @@
 }
 
 .tariff {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	align-items: stretch;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
   font-size: 2rem;
-  margin-bottom: 10px;
-  padding: 5px;
+  margin: 10px 20px;
+  padding: 15px;
   box-sizing: border-box;
-  border: 1px solid red;
-  span{
+  border-radius: 10px;
+  background: var(--circleColor);
+  box-shadow: var(--shadowShift) 0 var(--shadowBlur) rgba(55 84 170 / 0.2), calc(var(--shadowShift) * -1) 0 var(--shadowBlur) rgba(255 255 255 / 1);
+
+  span {
     flex: 1;
   }
-  .time{
+
+  .time {
     text-transform: lowercase;
   }
 }
