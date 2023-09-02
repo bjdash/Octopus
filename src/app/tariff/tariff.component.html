@@ -1,0 +1,19 @@
+<div>
+  <div class="top-cont">
+    <div class="current-rate" [ngClass]="valueForMoney">
+      <span class="price">
+        {{tariffs[0]?.value_inc_vat}}
+      </span>
+      <span class="pence">p</span>
+    </div>
+    <div class="wave__container">
+      <div class="wave__circle"></div>
+      <div class="wave__circle"></div>
+      <div class="wave__circle"></div>
+    </div>
+  </div>
+  <div *ngFor="let tariff of tariffs" class="tariff">
+    <span class="time">{{tariff.valid_from|date:'h:mm'}}<span class="ampm">{{tariff.valid_from|date:'a'}}</span></span>
+    <span class="price">{{tariff.value_inc_vat}} p</span>
+  </div>
+</div>

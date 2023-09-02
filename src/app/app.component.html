@@ -1,22 +1,27 @@
-<div>
-  <div class="top-cont">
-    <div class="current-rate" [ngClass]="valueForMoney">
-      <span class="price">
-        {{tariffs[0]?.value_inc_vat}}
-      </span>
-      <span class="pence">p</span>
-    </div>
-    <div class="wave__container">
-      <div class="wave__circle"></div>
-      <div class="wave__circle"></div>
-      <div class="wave__circle"></div>
-    </div>
+<router-outlet></router-outlet>
+<div class="tab" [class.tariff]="tariff.isActive" [class.consumption]="consumption.isActive"
+  [class.settings]="settings.isActive">
+  <div class="icons">
+    <a href="" [routerLink]="''" routerLinkActive="active" #tariff="routerLinkActive"
+      [routerLinkActiveOptions]="{exact: true}" class="a-tariff">
+      <!-- <img src="assets/monitoring.svg" /> -->
+    </a>
+    <a href="" [routerLink]="'consumption'" routerLinkActive="active" #consumption="routerLinkActive"
+      [routerLinkActiveOptions]="{exact: true}" class="a-consumption">
+      <!-- <img src="assets/pound.svg" /> -->
+    </a>
+    <a href="" [routerLink]="'settings'" routerLinkActive="active" #settings="routerLinkActive"
+      [routerLinkActiveOptions]="{exact: true}" class="a-settings">
+      <!-- <img src="assets/settings.svg"  /> -->
+    </a>
   </div>
-  <div *ngFor="let tariff of tariffs" class="tariff">
-    <span class="time">{{tariff.valid_from|date:'h:mm a'}}</span>
-    <span class="price">{{tariff.value_inc_vat}} p</span>
+  <div class="bar">
+    <div class="cap"></div>
+    <div class="slider">
+      <div class="side"></div>
+      <div class="circle"></div>
+      <div class="side"></div>
+    </div>
+    <div class="cap"></div>
   </div>
 </div>
-
-
-<router-outlet></router-outlet>
