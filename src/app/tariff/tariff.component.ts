@@ -11,7 +11,6 @@ import { Tariff } from '../models';
 })
 export class TariffComponent {
   tariffs: Tariff[] = [];
-  valueForMoney: '' | 'green' | 'orange' | 'red' = ''
   constructor() {
     this.getTariff();
   }
@@ -37,18 +36,6 @@ export class TariffComponent {
           t.value_inc_vat = parseFloat(t.value_inc_vat.toFixed(2));
           return t
         });
-
-      if (this.tariffs.length > 0) {
-        let current = this.tariffs[0].value_inc_vat;
-        this.valueForMoney = ''
-        if (current < 20) {
-          this.valueForMoney = 'green'
-        } else if (current < 27) {
-          this.valueForMoney = 'orange'
-        } else {
-          this.valueForMoney = 'red'
-        }
-      }
     } else {
       // Sometimes the API will fail!
       throw new Error("Request failed");

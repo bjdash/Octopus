@@ -6,13 +6,15 @@ import { AppComponent } from './app.component';
 import { TariffComponent } from './tariff/tariff.component';
 import { ConsumptionComponent } from './consumption/consumption.component';
 import { SettingsComponent } from './settings/settings.component';
+import { PriceColorPipe } from './priceColor.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     TariffComponent,
     ConsumptionComponent,
-    SettingsComponent
+    SettingsComponent,
+    PriceColorPipe
   ],
   imports: [
     BrowserModule,
