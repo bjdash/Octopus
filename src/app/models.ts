@@ -5,3 +5,17 @@ export interface Tariff {
   valid_to: string,
   payment_method?: any
 }
+
+export interface Consumption {
+  consumption: number,
+  interval_start: string,
+  interval_end: string
+}
+
+export interface AccountDetails {
+  apiKey: string
+  electricitySerialNo: string
+  gasSerialNo: string
+  mpan: string
+  mprn: string
+}

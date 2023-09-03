@@ -1,1 +1,18 @@
-<p>settings works!</p>
+<div class="pad10">
+  <h2>Settings</h2>
+  <form name="account" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form">
+      <label>Electricity meter MPAN</label>
+      <input type="text" class="inp" formControlName="mpan" />
+      <label>Electricity meter serial no</label>
+      <input type="text" class="inp" formControlName="electricitySerialNo" />
+      <label>Gas meter MPRN</label>
+      <input type="text" class="inp" formControlName="mprn" />
+      <label>Electricity meter serial no</label>
+      <input type="text" class="inp" formControlName="gasSerialNo" />
+      <label>API Key</label>
+      <input type="text" class="inp" formControlName="apiKey" />
+      <button type="submit"> Save</button>
+    </div>
+  </form>
+</div>
