@@ -3,7 +3,8 @@ export interface Tariff {
   value_inc_vat: number,
   valid_from: string,
   valid_to: string,
-  payment_method?: any
+  payment_method?: any,
+  isTomorrow?: boolean
 }
 
 export interface Consumption {

@@ -115,31 +115,13 @@
 }
 
 .tariff {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: stretch;
   font-size: 2rem;
-  margin: 10px 20px;
-  padding: 15px;
-  box-sizing: border-box;
-  border-radius: 10px;
-  background: var(--circleColor);
-  box-shadow: var(--shadowShift) 0 var(--shadowBlur) rgba(55 84 170 / 0.2), calc(var(--shadowShift) * -1) 0 var(--shadowBlur) rgba(255 255 255 / 1);
 
   span {
     flex: 1;
 
     &:last-child {
       text-align: right;
-    }
-  }
-
-  .time {
-    text-transform: lowercase;
-
-    .ampm {
-      font-size: 1.3rem;
     }
   }
 }

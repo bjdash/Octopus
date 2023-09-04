@@ -1,10 +1,14 @@
 import { Component } from '@angular/core';
 import { AccountDetails, Consumption } from '../models';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-consumption',
   templateUrl: './consumption.component.html',
-  styleUrls: ['./consumption.component.scss']
+  styleUrls: ['./consumption.component.scss'],
+  host: {
+    class: 'bottom-gap'
+  }
 })
 export class ConsumptionComponent {
   accountDetails: AccountDetails = {
@@ -14,23 +18,31 @@ export class ConsumptionComponent {
     gasSerialNo: '',
     apiKey: ''
   }
+  activeTab: 'gas' | 'electricity️' = 'electricity️'
 
   todaysConsumption_e: Consumption[] = []
 
-  constructor() {
+  constructor(private router: Router) {
     Object.keys(this.accountDetails).forEach(key => {
       this.accountDetails[key as keyof AccountDetails] = localStorage.getItem(key) as string;
     });
+    if (Object.values(this.accountDetails).some(v => !v)) {
+      this.router.navigate(['settings'])
 
-    this.getElectricConsumptionToday();
+    } else {
+      this.getElectricConsumptionToday();
+    }
+
   }
 
   async getElectricConsumptionToday() {
-    let midnight = new Date();
-    midnight.setHours(0, 0, 0, 0)
+    let yesterday = new Date();
+    yesterday.setHours(0, 0, 0, 0);
+    yesterday.setDate(yesterday.getDate() - 2)
+
 
     const res = await fetch(
-      `https://api.octopus.energy/v1/electricity-meter-points/${this.accountDetails.mpan}/meters/${this.accountDetails.electricitySerialNo}/consumption/?period_from=${midnight.toISOString()}`,
+      `https://api.octopus.energy/v1/electricity-meter-points/${this.accountDetails.mpan}/meters/${this.accountDetails.electricitySerialNo}/consumption/?period_from=${yesterday.toISOString()}`,
       {
         headers: {
           Authorization: `Basic ${btoa(this.accountDetails.apiKey + ':')}`

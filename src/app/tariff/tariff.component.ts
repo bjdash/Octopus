@@ -34,6 +34,9 @@ export class TariffComponent {
               : 0;
         }).map(t => {
           t.value_inc_vat = parseFloat(t.value_inc_vat.toFixed(2));
+          now.setHours(23, 59, 59, 999);
+          t.isTomorrow = new Date(t.valid_from) > now
+
           return t
         });
     } else {

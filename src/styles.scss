@@ -24,3 +24,54 @@ body {
 .pad10 {
   padding: 10px;
 }
+
+.card {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  padding: 15px;
+  box-sizing: border-box;
+  margin: 10px 20px;
+  border-radius: 10px;
+  background: var(--circleColor);
+  box-shadow: var(--shadowShift) 0 var(--shadowBlur) rgba(55 84 170 / 0.2),
+    calc(var(--shadowShift) * -1) 0 var(--shadowBlur) rgba(255 255 255 / 1);
+
+  .time {
+    text-transform: lowercase;
+    position: relative;
+
+    .ampm {
+      font-size: 1.3rem;
+    }
+
+    .date {
+      position: absolute;
+      bottom: -1rem;
+      font-size: 1rem;
+      left: 5px;
+    }
+  }
+}
+
+.switch {
+  display: flex;
+  font-size: 1.8rem;
+  margin: 0px 20px;
+
+  button {
+    flex: 1;
+    text-align: center;
+    border: none;
+    font-size: 1.8rem;
+    padding: 5px;
+    background: none;
+
+    &.active {
+      background-color: #0a95ff;
+      color: white;
+      border-radius: 10px;
+    }
+  }
+}

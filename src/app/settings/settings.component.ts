@@ -32,9 +32,15 @@ export class SettingsComponent {
   }
 
   onSubmit() {
+    if (!this.form.valid) {
+      alert('Fill in all the fields');
+      return;
+    }
     this.savedValues = this.form.value;
     Object.keys(this.form.value).forEach(key => {
-      localStorage.setItem(key, this.savedValues[key as keyof AccountDetails])
+      if (this.savedValues[key as keyof AccountDetails]) {
+        localStorage.setItem(key, this.savedValues[key as keyof AccountDetails])
+      }
     })
   }
 }
