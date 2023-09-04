@@ -10,7 +10,8 @@ export interface Tariff {
 export interface Consumption {
   consumption: number,
   interval_start: string,
-  interval_end: string
+  interval_end: string,
+  unitRate?: number
 }
 
 export interface AccountDetails {

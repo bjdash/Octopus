@@ -13,8 +13,12 @@
       <span class="ampm">{{tariff.interval_start|date:'a'}}</span>
       <span class="date">{{tariff.interval_start|date:'d MMM'}}</span>
     </span>
-    <span class="price">{{tariff.consumption}} kWh</span>
+    <span class="price">
+      <div>{{tariff.consumption}} <span class="unit">kWh</span></div>
+      <div>{{(tariff.unitRate! * tariff.consumption).toFixed(2)}}<span class="unit">p @ {{tariff.unitRate}}</span></div>
+    </span>
   </div>
+  <button type="button" (click)="pastDays=pastDays+1; getElectricConsumptionToday(pastDays)">Load 1 more day</button>
 </div>
 
 <div *ngIf="activeTab == 'gas'" style="text-align: center;font-size: 1.5rem; margin-top: 30px;">
