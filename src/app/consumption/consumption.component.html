@@ -1,26 +1,30 @@
-<h2>Consumptions</h2>
+<div class="container">
+  <h2>Consumptions</h2>
 
-<div class="switch">
-  <button type="button" [ngClass]="{active: activeTab === 'electricity️'}"
-    (click)="activeTab ='electricity️'">⚡Electricity️</button>
-  <button type="button" [ngClass]="{active: activeTab === 'gas'}" (click)="activeTab ='gas'">🔥Gas</button>
-</div>
-
-<div *ngIf="activeTab == 'electricity️'">
-  <div *ngFor="let tariff of todaysConsumption_e" class="consumption card">
-    <span class="time">
-      <span>{{tariff.interval_start|date:'h:mm'}}</span>
-      <span class="ampm">{{tariff.interval_start|date:'a'}}</span>
-      <span class="date">{{tariff.interval_start|date:'d MMM'}}</span>
-    </span>
-    <span class="price">
-      <div>{{tariff.consumption}} <span class="unit">kWh</span></div>
-      <div>{{(tariff.unitRate! * tariff.consumption).toFixed(2)}}<span class="unit">p @ {{tariff.unitRate}}</span></div>
-    </span>
+  <div class="switch">
+    <button type="button" [ngClass]="{active: activeTab === 'electricity️'}"
+      (click)="activeTab ='electricity️'">⚡Electricity️</button>
+    <button type="button" [ngClass]="{active: activeTab === 'gas'}" (click)="activeTab ='gas'">🔥Gas</button>
   </div>
-  <button type="button" (click)="pastDays=pastDays+1; getElectricConsumptionToday(pastDays)">Load 1 more day</button>
-</div>
 
-<div *ngIf="activeTab == 'gas'" style="text-align: center;font-size: 1.5rem; margin-top: 30px;">
-  TODO
+  <div *ngIf="activeTab == 'electricity️'">
+    <div *ngFor="let tariff of todaysConsumption_e" class="consumption card">
+      <span class="time">
+        <span>{{tariff.interval_start|date:'h:mm'}}</span>
+        <span class="ampm">{{tariff.interval_start|date:'a'}}</span>
+        <span class="date">{{tariff.interval_start|date:'d MMM'}}</span>
+      </span>
+      <span class="price">
+        <div>{{tariff.consumption}} <span class="unit">kWh</span></div>
+        <div>{{(tariff.unitRate! * tariff.consumption).toFixed(2)}}<span class="unit">p @ {{tariff.unitRate}}</span>
+        </div>
+      </span>
+    </div>
+  </div>
+
+  <div *ngIf="activeTab == 'gas'" style="text-align: center;font-size: 1.5rem; margin-top: 30px;">
+    TODO
+  </div>
+  <button type="button" class="more" (click)="pastDays=pastDays+1; getElectricConsumptionToday(pastDays)">Load 1 more
+    day</button>
 </div>
