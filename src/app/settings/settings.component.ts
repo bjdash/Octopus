@@ -41,6 +41,7 @@ export class SettingsComponent {
       if (this.savedValues[key as keyof AccountDetails]) {
         localStorage.setItem(key, this.savedValues[key as keyof AccountDetails])
       }
-    })
+    });
+    alert('Saved !');
   }
 }

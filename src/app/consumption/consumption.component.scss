@@ -15,7 +15,7 @@ h2 {
     background-color: rgb(24, 0, 72);
     color: azure;
     margin: 10px;
-    padding: 10px;
+    padding: 10px 15px;
     font-size: 1.8rem;
     display: flex;
     flex-wrap: wrap;
@@ -23,9 +23,9 @@ h2 {
     align-items: stretch;
 
     &>div {
-      flex: 1;
 
       &:last-child {
+        flex: 1;
         text-align: right;
       }
     }
