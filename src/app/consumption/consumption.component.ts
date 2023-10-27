@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AccountDetails, Consumption, Tariff } from '../models';
+import { AccountDetails, Consumption, DailyConsumption, Tariff } from '../models';
 import { Router } from '@angular/router';
 
 @Component({
@@ -22,7 +22,8 @@ export class ConsumptionComponent {
   pastDays = 0;
   tariffMap: { [key: string]: number } = {}
 
-  todaysConsumption_e: Consumption[] = []
+  todaysConsumption_e: Consumption[] = [];
+  dailyConsumptions: { [key: string]: DailyConsumption } = {}
 
   constructor(private router: Router) {
     Object.keys(this.accountDetails).forEach(key => {
@@ -38,15 +39,22 @@ export class ConsumptionComponent {
   }
 
   async getElectricConsumptionToday(pastDays: number) {
-    console.log(pastDays);
+    let fetchFrom = new Date(), fetchTill = new Date();
+    fetchFrom.setHours(0, 0, 0, 0);
+    fetchFrom.setDate(fetchFrom.getDate() - pastDays);
+    if (pastDays !== 0) {
+      fetchTill.setHours(0, 0, 0, 0);
+      fetchTill.setDate(fetchTill.getDate() - pastDays + 1)
+    }
 
-    let fetchTill = new Date();
-    fetchTill.setHours(0, 0, 0, 0);
-    fetchTill.setDate(fetchTill.getDate() - pastDays)
+    // if (fetchFrom.getTimezoneOffset() != 0) {
+    //   fetchFrom.setHours(fetchFrom.getHours() - (fetchFrom.getTimezoneOffset() / 60))
+    //   fetchTill.setHours(fetchTill.getHours() - (fetchTill.getTimezoneOffset() / 60))
+    // }
 
-
-    const res = await fetch(
-      `https://api.octopus.energy/v1/electricity-meter-points/${this.accountDetails.mpan}/meters/${this.accountDetails.electricitySerialNo}/consumption/?period_from=${fetchTill.toISOString()}`,
+    console.log(fetchFrom.toLocaleString(), fetchTill.toLocaleString(), pastDays)
+    const consumptionResponse = await fetch(
+      `https://api.octopus.energy/v1/electricity-meter-points/${this.accountDetails.mpan}/meters/${this.accountDetails.electricitySerialNo}/consumption/?period_from=${fetchFrom.toISOString()}&period_to=${fetchTill.toISOString()}`,
       {
         headers: {
           Authorization: `Basic ${btoa(this.accountDetails.apiKey + ':')}`
@@ -54,23 +62,23 @@ export class ConsumptionComponent {
       }
     );
 
-    if (res.ok) {
+    if (consumptionResponse.ok) {
       const tariffResp = await fetch(
-        `https://api.octopus.energy/v1/products/AGILE-FLEX-22-11-25/electricity-tariffs/E-1R-AGILE-FLEX-22-11-25-N/standard-unit-rates/?period_from=${fetchTill.toISOString()}`
+        `https://api.octopus.energy/v1/products/AGILE-FLEX-22-11-25/electricity-tariffs/E-1R-AGILE-FLEX-22-11-25-N/standard-unit-rates/?period_from=${fetchFrom.toISOString()}&period_to=${fetchTill.toISOString()}`
       );
       if (tariffResp.ok) {
         ((await tariffResp.json()).results as Tariff[]).forEach(t => {
           this.tariffMap[t.valid_from] = parseFloat(t.value_inc_vat.toFixed(2))
         })
       }
-      console.log(this.tariffMap);
 
-      this.todaysConsumption_e = ((await res.json()).results as Consumption[]).map(c => {
-        console.log(c.interval_start, new Date(c.interval_start).toISOString());
-
+      this.todaysConsumption_e = ((await consumptionResponse.json()).results as Consumption[]).map(c => {
         c.unitRate = this.tariffMap[new Date(c.interval_start).toISOString().replace(/\.\d+/, "")] || 0;
         return c;
       });
+
+      console.log(this.todaysConsumption_e);
+
 
 
     } else {
