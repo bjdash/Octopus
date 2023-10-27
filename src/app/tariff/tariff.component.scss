@@ -20,15 +20,11 @@
 .wave__circle {
   position: absolute;
   background-color: transparent;
-  border: 10px solid var(--circleColor);
+  border: 10px solid rgb(104 123 244);
   border-radius: 50%;
-  box-shadow: inset var(--shadowShift) var(--shadowShift) var(--shadowBlur) rgba(55 84 170 / 0.2),
-    var(--shadowShift) var(--shadowShift) var(--shadowBlur) rgba(55 84 170 / 0.2),
-    inset calc(var(--shadowShift) * -1) calc(var(--shadowShift) * -1) var(--shadowBlur) rgba(255 255 255 / 1),
-    calc(var(--shadowShift) * -1) calc(var(--shadowShift) * -1) var(--shadowBlur) rgba(255 255 255 / 1);
+  box-shadow: inset var(--shadowShift) var(--shadowShift) var(--shadowBlur) rgba(55, 84, 170, 0.2), var(--shadowShift) var(--shadowShift) var(--shadowBlur) rgba(55, 84, 170, 0.2), inset calc(var(--shadowShift) * -1) calc(var(--shadowShift) * -1) var(--shadowBlur) rgb(65 57 196), calc(var(--shadowShift) * -1) calc(var(--shadowShift) * -1) var(--shadowBlur) rgb(61 53 184);
   filter: blur(3px);
-
-  animation-name: ripple;
+  animation-name: _ngcontent-ng-c107802882_ripple;
   animation-duration: 3s;
   animation-timing-function: cubic-bezier(0, 0.2, 0.8, 1);
   animation-iteration-count: infinite;
@@ -85,8 +81,9 @@
   justify-content: center;
   align-items: center;
   z-index: 1;
-  background-color: #ffffffd1;
-  box-shadow: var(--shadowShift) 0 var(--shadowBlur) rgba(55 84 170 / 0.2), calc(var(--shadowShift) * -1) 0 var(--shadowBlur) rgba(255 255 255 / 1);
+  border: 0.8rem solid rgb(102, 117, 246);
+  background: radial-gradient(rgb(45, 26, 131), rgb(88, 64, 255));
+  box-shadow: var(--shadowShift) 0 var(--shadowBlur) rgba(55 84 170 / 0.2), calc(var(--shadowShift) * -1) 0 var(--shadowBlur) rgb(65 57 195);
 
   &.green {
     color: green;
@@ -122,12 +119,13 @@
 
     &:last-child {
       text-align: right;
+      font-weight: bold;
     }
   }
 }
 
 .green {
-  color: green;
+  color: #00ff11;
 }
 
 .orange {

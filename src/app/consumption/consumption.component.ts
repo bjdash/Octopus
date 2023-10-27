@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AccountDetails, Consumption, DailyConsumption, Tariff } from '../models';
 import { Router } from '@angular/router';
+import { KeyValue } from '@angular/common';
 
 @Component({
   selector: 'app-consumption',
@@ -23,7 +24,7 @@ export class ConsumptionComponent {
   tariffMap: { [key: string]: number } = {}
 
   todaysConsumption_e: Consumption[] = [];
-  dailyConsumptions: { [key: string]: DailyConsumption } = {}
+  dailyConsumptions: DailyConsumption[] = []
 
   constructor(private router: Router) {
     Object.keys(this.accountDetails).forEach(key => {
@@ -40,7 +41,7 @@ export class ConsumptionComponent {
 
   async getElectricConsumptionToday(pastDays: number) {
     let fetchFrom = new Date(), fetchTill = new Date();
-    fetchFrom.setHours(0, 0, 0, 0);
+    fetchFrom.setHours(0, 1, 0, 0);
     fetchFrom.setDate(fetchFrom.getDate() - pastDays);
     if (pastDays !== 0) {
       fetchTill.setHours(0, 0, 0, 0);
@@ -63,21 +64,41 @@ export class ConsumptionComponent {
     );
 
     if (consumptionResponse.ok) {
+      let tariffMap: { [key: string]: number } = {};
+      // this.dailyConsumptions[fetchFrom.toLocaleDateString()] = {}
+
+
       const tariffResp = await fetch(
         `https://api.octopus.energy/v1/products/AGILE-FLEX-22-11-25/electricity-tariffs/E-1R-AGILE-FLEX-22-11-25-N/standard-unit-rates/?period_from=${fetchFrom.toISOString()}&period_to=${fetchTill.toISOString()}`
       );
       if (tariffResp.ok) {
         ((await tariffResp.json()).results as Tariff[]).forEach(t => {
           this.tariffMap[t.valid_from] = parseFloat(t.value_inc_vat.toFixed(2))
+          tariffMap[t.valid_from] = parseFloat(t.value_inc_vat.toFixed(2));
         })
       }
 
-      this.todaysConsumption_e = ((await consumptionResponse.json()).results as Consumption[]).map(c => {
+      let consumptionResponseJson = await consumptionResponse.json();
+      this.todaysConsumption_e = (consumptionResponseJson.results as Consumption[]).map(c => {
         c.unitRate = this.tariffMap[new Date(c.interval_start).toISOString().replace(/\.\d+/, "")] || 0;
         return c;
       });
 
-      console.log(this.todaysConsumption_e);
+      let dayData: DailyConsumption = {
+        totalKW: '0',
+        totalPrice: '0',
+        date: fetchFrom.toISOString(),
+        consumptions: (consumptionResponseJson.results as Consumption[]).map(c => {
+          c.unitRate = this.tariffMap[new Date(c.interval_start).toISOString().replace(/\.\d+/, "")] || 0;
+          return c;
+        })
+      };
+      dayData.totalKW = dayData.consumptions.reduce((partialSum, c) => partialSum + c.consumption, 0).toFixed(2);
+      dayData.totalPrice = dayData.consumptions.reduce((partialSum, c) => partialSum + (c.consumption * c.unitRate!), 0).toFixed(2);
+      this.dailyConsumptions.push(dayData);
+
+
+      console.log(this.dailyConsumptions);
 
 
 
@@ -85,5 +106,9 @@ export class ConsumptionComponent {
       // Sometimes the API will fail!
       throw new Error("Request failed");
     }
+  }
+
+  keyDescOrder = (a: KeyValue<string, string>, b: KeyValue<string, string>): number => {
+    return new Date(a.key) > new Date(b.key) ? -1 : (b.key > a.key ? 1 : 0);
   }
 }

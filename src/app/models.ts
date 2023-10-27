@@ -14,6 +14,13 @@ export interface Consumption {
   unitRate?: number
 }
 
+export interface DailyConsumption {
+  totalKW: string,
+  totalPrice: string,
+  date: string,
+  consumptions: Consumption[]
+}
+
 export interface AccountDetails {
   apiKey: string
   electricitySerialNo: string

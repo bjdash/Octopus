@@ -1,12 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
 body {
-  background-image: linear-gradient(to right, #fafafa 0%, #d8d8d8 100%);
+  // background-image: linear-gradient(to right, #fafafa 0%, #d8d8d8 100%);
   margin: 0;
   padding: 0;
+  color: azure;
+  background-color: #100030;
 }
 
 * {
   box-sizing: border-box;
+}
+
+button {
+  cursor: pointer;
 }
 
 :root {
@@ -34,13 +40,15 @@ body {
   box-sizing: border-box;
   margin: 10px 20px;
   border-radius: 10px;
-  background: var(--circleColor);
-  box-shadow: var(--shadowShift) 0 var(--shadowBlur) rgba(55 84 170 / 0.2),
-    calc(var(--shadowShift) * -1) 0 var(--shadowBlur) rgba(255 255 255 / 1);
+  background-color: rgb(45, 26, 131);
+  // background: var(--circleColor);
+  // box-shadow: var(--shadowShift) 0 var(--shadowBlur) rgba(55 84 170 / 0.2),
+  //   calc(var(--shadowShift) * -1) 0 var(--shadowBlur) rgba(255 255 255 / 1);
 
   .time {
     text-transform: lowercase;
     position: relative;
+    font-size: 1.8rem;
 
     .ampm {
       font-size: 1.3rem;
@@ -67,9 +75,10 @@ body {
     font-size: 1.8rem;
     padding: 5px;
     background: none;
+    color: azure;
 
     &.active {
-      background-color: #0a95ff;
+      background-color: rgb(88, 64, 255);
       color: white;
       border-radius: 10px;
     }

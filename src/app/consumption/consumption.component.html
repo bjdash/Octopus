@@ -8,7 +8,7 @@
   </div>
 
   <div *ngIf="activeTab == 'electricity️'">
-    <div *ngFor="let tariff of todaysConsumption_e" class="consumption card">
+    <!-- <div *ngFor="let tariff of todaysConsumption_e" class="consumption card">
       <span class="time">
         <span>{{tariff.interval_start|date:'h:mm'}}</span>
         <span class="ampm">{{tariff.interval_start|date:'a'}}</span>
@@ -19,6 +19,33 @@
         <div>{{(tariff.unitRate! * tariff.consumption).toFixed(2)}}<span class="unit">p @ {{tariff.unitRate}}</span>
         </div>
       </span>
+    </div> -->
+
+    <div *ngFor="let day of dailyConsumptions">
+      <div class="day_card">
+        <div class="date">
+          <div>{{day.date|date:'d MMM'}}</div>
+          <div>
+            {{day.totalKW}}
+            <span class="sm">kw</span>
+            /
+            {{day.totalPrice}}
+            <span class="sm">p</span>
+          </div>
+        </div>
+        <div *ngFor="let consumption of day.consumptions" class="consumption card">
+          <span class="time">
+            <span>{{consumption.interval_start|date:'h:mm'}}</span>
+            <span class="ampm">{{consumption.interval_start|date:'a'}}</span>
+          </span>
+          <span class="price">
+            <div>{{consumption.consumption}} <span class="unit">kWh</span></div>
+            <div>{{(consumption.unitRate! * consumption.consumption).toFixed(2)}}<span class="unit">p @
+                {{consumption.unitRate}}</span>
+            </div>
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 
