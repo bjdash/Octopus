@@ -13,6 +13,7 @@ import {
   Info,
   Clock,
   ListFilter,
+  Coins,
   ChevronDown
 } from 'lucide-react';
 import { useOctopus } from '../context/OctopusContext';
@@ -295,7 +296,7 @@ export const ElectricityPage = () => {
   const handleSelectCalendarDate = (date) => {
     const normalized = new Date(date);
     normalized.setHours(0, 0, 0, 0);
-    if (normalized.getTime() > todayMidnight.getTime()) return; // Disallow future dates
+    if (normalized.getTime() > todayMidnight.getTime()) return;
     setSelectedDate(normalized);
     setIsCalendarOpen(false);
   };
@@ -319,7 +320,7 @@ export const ElectricityPage = () => {
     const year = calendarMonth.getFullYear();
     const month = calendarMonth.getMonth();
 
-    const firstDayIndex = new Date(year, month, 1).getDay(); // 0 is Sunday
+    const firstDayIndex = new Date(year, month, 1).getDay();
     const startOffset = (firstDayIndex + 6) % 7;
 
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -355,7 +356,7 @@ export const ElectricityPage = () => {
       });
     }
 
-    // Next month padding to fill complete weeks
+    // Next month padding
     const totalSlots = Math.ceil(days.length / 7) * 7;
     const remaining = totalSlots - days.length;
     for (let i = 1; i <= remaining; i++) {
@@ -379,21 +380,14 @@ export const ElectricityPage = () => {
             <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#fff' }}>
               Electricity Telemetry
             </h1>
-            <span className="cyber-badge cyber-badge-blue">LIVE GRID</span>
+            <button type="button"
+              style={{ cursor: 'pointer' }}
+              onClick={fetchConsumption} className="cyber-badge cyber-badge-blue">
+              <RefreshCw size={14} className={isLoading ? 'spin-icon' : ''} />
+              <span>{isLoading ? 'Syncing...' : 'Refresh'}</span>
+            </button>
           </div>
         </div>
-
-        <button
-          type="button"
-          onClick={fetchConsumption}
-          disabled={isLoading}
-          className="cyber-btn cyber-btn-outline"
-          style={{ padding: '0.45rem 0.85rem', fontSize: '0.8rem', gap: '0.4rem' }}
-          title="Refresh Data from Octopus API"
-        >
-          <RefreshCw size={14} className={isLoading ? 'spin-icon' : ''} />
-          <span>{isLoading ? 'Syncing...' : 'Refresh'}</span>
-        </button>
       </div>
 
       {/* Date Switcher - Calendar View Popover Dock */}
@@ -518,12 +512,12 @@ export const ElectricityPage = () => {
                   color: 'var(--accent-blue-bright)',
                   cursor:
                     calendarMonth.getFullYear() === todayMidnight.getFullYear() &&
-                    calendarMonth.getMonth() === todayMidnight.getMonth()
+                      calendarMonth.getMonth() === todayMidnight.getMonth()
                       ? 'not-allowed'
                       : 'pointer',
                   opacity:
                     calendarMonth.getFullYear() === todayMidnight.getFullYear() &&
-                    calendarMonth.getMonth() === todayMidnight.getMonth()
+                      calendarMonth.getMonth() === todayMidnight.getMonth()
                       ? 0.3
                       : 1
                 }}
@@ -656,13 +650,13 @@ export const ElectricityPage = () => {
                       background: dObj.isSelected
                         ? 'linear-gradient(135deg, #00D2FF 0%, #0066FF 100%)'
                         : dObj.isTodayDate
-                        ? 'rgba(0, 210, 255, 0.15)'
-                        : 'transparent',
+                          ? 'rgba(0, 210, 255, 0.15)'
+                          : 'transparent',
                       border: dObj.isSelected
                         ? '1px solid #00D2FF'
                         : dObj.isTodayDate
-                        ? '1px solid rgba(0, 210, 255, 0.4)'
-                        : '1px solid transparent',
+                          ? '1px solid rgba(0, 210, 255, 0.4)'
+                          : '1px solid transparent',
                       color: dObj.isSelected ? '#fff' : dObj.isTodayDate ? 'var(--accent-blue-bright)' : '#E2E8F0',
                       fontWeight: dObj.isSelected || dObj.isTodayDate ? 700 : 500,
                       fontSize: '0.8rem',
@@ -679,6 +673,118 @@ export const ElectricityPage = () => {
           </div>
         )}
       </div>
+
+      {/* Unified 3-Segment Horizontal Metric Ribbon */}
+      {!isLoading && !fetchError && consumptionList.length > 0 && (
+        <div
+          className="cyber-card cyber-card-blue-glow"
+          style={{
+            padding: '0.85rem 1rem',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '1rem',
+            alignItems: 'center',
+            borderRadius: 'var(--radius-lg)'
+          }}
+        >
+          {/* Segment 1: Day Total */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Zap size={13} color="var(--accent-blue-bright)" />
+              <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Day Total
+              </span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.3rem' }}>
+              <span className="font-display" style={{ fontSize: '1.35rem', fontWeight: 800, color: '#fff' }}>
+                {metrics.totalKwh}
+              </span>
+              <span className="font-mono" style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                kWh
+              </span>
+            </div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '0.1rem' }}>
+              <div>
+                <span style={{ color: 'var(--text-muted)' }}>Est: </span>
+                <strong style={{ color: '#fff' }}>{metrics.totalCostWithStanding}</strong>
+              </div>
+              <div className="font-mono" style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                inc. {standingCharge}p
+              </div>
+            </div>
+          </div>
+
+          {/* Segment 2: Off-Peak */}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.25rem',
+              borderLeft: '1px solid var(--border-subtle)',
+              paddingLeft: '1rem'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Clock size={13} color="#10B981" />
+              <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Off-Peak
+              </span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.3rem' }}>
+              <span className="font-display" style={{ fontSize: '1.35rem', fontWeight: 800, color: '#10B981' }}>
+                {metrics.offPeakKwh}
+              </span>
+              <span className="font-mono" style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                kWh
+              </span>
+            </div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '0.1rem' }}>
+              <div>
+                <span style={{ color: 'var(--text-muted)' }}>Cost: </span>
+                <strong style={{ color: '#10B981' }}>{metrics.offPeakCost}</strong>
+              </div>
+              <div className="font-mono" style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                @{offPeakRate}p
+              </div>
+            </div>
+          </div>
+
+          {/* Segment 3: Standard */}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.25rem',
+              borderLeft: '1px solid var(--border-subtle)',
+              paddingLeft: '1rem'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Coins size={13} color="var(--accent-blue-bright)" />
+              <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Standard
+              </span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.3rem' }}>
+              <span className="font-display" style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--accent-blue-bright)' }}>
+                {metrics.standardKwh}
+              </span>
+              <span className="font-mono" style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                kWh
+              </span>
+            </div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '0.1rem' }}>
+              <div>
+                <span style={{ color: 'var(--text-muted)' }}>Cost: </span>
+                <strong style={{ color: 'var(--accent-blue-bright)' }}>{metrics.standardCost}</strong>
+              </div>
+              <div className="font-mono" style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                @{standardRate}p
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Consumption Telemetry & Half-Hourly Vector Panel */}
       <div className="cyber-card cyber-card-blue-glow">
@@ -698,77 +804,6 @@ export const ElectricityPage = () => {
             </span>
           </div>
         </div>
-
-        {/* Selected Day Stats Bar with Uncluttered Price Breakdown */}
-        {!isLoading && !fetchError && consumptionList.length > 0 && (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
-              gap: '0.75rem',
-              padding: '0.85rem 1rem',
-              background: 'rgba(8, 12, 28, 0.75)',
-              border: '1px solid var(--border-subtle)',
-              borderRadius: 'var(--radius-md)',
-              marginBottom: '1rem'
-            }}
-          >
-            {/* Day Total & Est Cost */}
-            <div>
-              <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                Day Total Energy
-              </div>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.35rem', marginTop: '0.2rem' }}>
-                <span className="font-display" style={{ fontSize: '1.35rem', fontWeight: 800, color: '#fff' }}>
-                  {metrics.totalKwh}
-                </span>
-                <span className="font-mono" style={{ fontSize: '0.8rem', color: 'var(--accent-blue-bright)' }}>
-                  kWh
-                </span>
-              </div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
-                Est: <strong style={{ color: '#fff' }}>{metrics.totalCostWithStanding}</strong> <span style={{ fontSize: '0.675rem', opacity: 0.8 }}>(inc. {standingCharge}p standing)</span>
-              </div>
-            </div>
-
-            {/* Off-Peak Energy & Cost */}
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.725rem', color: '#10B981', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
-                <Clock size={12} />
-                <span>Off-Peak (00:30 – 05:30)</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.35rem', marginTop: '0.2rem' }}>
-                <span className="font-display" style={{ fontSize: '1.35rem', fontWeight: 800, color: '#10B981' }}>
-                  {metrics.offPeakKwh}
-                </span>
-                <span className="font-mono" style={{ fontSize: '0.8rem', color: '#A7F3D0' }}>
-                  kWh
-                </span>
-              </div>
-              <div style={{ fontSize: '0.75rem', color: '#A7F3D0', marginTop: '0.2rem' }}>
-                Cost: <strong style={{ color: '#10B981' }}>{metrics.offPeakCost}</strong> <span style={{ fontSize: '0.675rem', opacity: 0.8 }}>(@{offPeakRate}p)</span>
-              </div>
-            </div>
-
-            {/* Standard Energy & Cost */}
-            <div>
-              <div style={{ fontSize: '0.725rem', color: 'var(--accent-blue-bright)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
-                Standard Energy
-              </div>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.35rem', marginTop: '0.2rem' }}>
-                <span className="font-display" style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--accent-blue-bright)' }}>
-                  {metrics.standardKwh}
-                </span>
-                <span className="font-mono" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                  kWh
-                </span>
-              </div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
-                Cost: <strong style={{ color: '#fff' }}>{metrics.standardCost}</strong> <span style={{ fontSize: '0.675rem', opacity: 0.8 }}>(@{standardRate}p)</span>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Simplified, Fixed-Height, Single-Row Telemetry Status Bar with Cost */}
         {!isLoading && !fetchError && consumptionList.length > 0 && (
@@ -957,7 +992,7 @@ export const ElectricityPage = () => {
                 overflowX: 'auto',
                 WebkitOverflowScrolling: 'touch',
                 paddingBottom: '1rem',
-                paddingTop: '3.5rem',
+                paddingTop: '1.5rem',
                 paddingLeft: '1rem',
                 paddingRight: '1rem'
               }}
@@ -1036,8 +1071,8 @@ export const ElectricityPage = () => {
                           boxShadow: isHovered
                             ? `0 0 16px ${barColor}`
                             : isOffPeak
-                            ? '0 0 10px rgba(16, 185, 129, 0.4)'
-                            : '0 0 8px rgba(0, 210, 255, 0.25)',
+                              ? '0 0 10px rgba(16, 185, 129, 0.4)'
+                              : '0 0 8px rgba(0, 210, 255, 0.25)',
                           transition: 'height 0.3s ease, transform 0.2s ease',
                           transform: isHovered ? 'scaleY(1.03)' : 'none'
                         }}
@@ -1193,15 +1228,14 @@ export const ElectricityPage = () => {
                     background: isHovered
                       ? 'rgba(0, 210, 255, 0.12)'
                       : item.isOffPeak
-                      ? 'rgba(16, 185, 129, 0.05)'
-                      : 'rgba(8, 12, 28, 0.45)',
-                    border: `1px solid ${
-                      isHovered
-                        ? 'rgba(0, 210, 255, 0.4)'
-                        : item.isOffPeak
+                        ? 'rgba(16, 185, 129, 0.05)'
+                        : 'rgba(8, 12, 28, 0.45)',
+                    border: `1px solid ${isHovered
+                      ? 'rgba(0, 210, 255, 0.4)'
+                      : item.isOffPeak
                         ? 'rgba(16, 185, 129, 0.18)'
                         : 'var(--border-subtle)'
-                    }`,
+                      }`,
                     transition: 'all var(--transition-fast)',
                     cursor: 'pointer'
                   }}
