@@ -12,6 +12,8 @@ const STORAGE_KEYS = {
   OFF_PEAK_RATE: 'offPeakRate',
   STANDARD_RATE: 'standardRate',
   STANDING_CHARGE: 'standingCharge',
+  GAS_STANDARD_RATE: 'gasStandardRate',
+  GAS_STANDING_CHARGE: 'gasStandingCharge',
   LEGACY_ALL: 'octopus_settings'
 };
 
@@ -24,11 +26,13 @@ export const OctopusProvider = ({ children }) => {
     gasSerial: '',
     offPeakRate: '4.99',
     standardRate: '27.05',
-    standingCharge: '56.6'
+    standingCharge: '56.6',
+    gasStandardRate: '7.23',
+    gasStandingCharge: '29.10'
   });
 
   const [isLoaded, setIsLoaded] = useState(false);
-  const [toast, setToast] = useState(null); // { message, type: 'success' | 'error' | 'info', id }
+  const [toast, setToast] = useState(null);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -41,6 +45,8 @@ export const OctopusProvider = ({ children }) => {
       const offPeakRate = localStorage.getItem(STORAGE_KEYS.OFF_PEAK_RATE) || '';
       const standardRate = localStorage.getItem(STORAGE_KEYS.STANDARD_RATE) || '';
       const standingCharge = localStorage.getItem(STORAGE_KEYS.STANDING_CHARGE) || '';
+      const gasStandardRate = localStorage.getItem(STORAGE_KEYS.GAS_STANDARD_RATE) || '';
+      const gasStandingCharge = localStorage.getItem(STORAGE_KEYS.GAS_STANDING_CHARGE) || '';
 
       // Check legacy combined key fallback if individual keys are missing
       let combined = {};
@@ -61,7 +67,9 @@ export const OctopusProvider = ({ children }) => {
         gasSerial: gasSerial || combined.gasSerial || '',
         offPeakRate: offPeakRate || combined.offPeakRate || '4.99',
         standardRate: standardRate || combined.standardRate || '27.05',
-        standingCharge: standingCharge || combined.standingCharge || '56.6'
+        standingCharge: standingCharge || combined.standingCharge || '56.6',
+        gasStandardRate: gasStandardRate || combined.gasStandardRate || '7.23',
+        gasStandingCharge: gasStandingCharge || combined.gasStandingCharge || '29.10'
       };
 
       setCredentials(initialCreds);
@@ -103,7 +111,9 @@ export const OctopusProvider = ({ children }) => {
         ...newSettings,
         offPeakRate: newSettings.offPeakRate?.trim() || '4.99',
         standardRate: newSettings.standardRate?.trim() || '27.05',
-        standingCharge: newSettings.standingCharge?.trim() || '56.6'
+        standingCharge: newSettings.standingCharge?.trim() || '56.6',
+        gasStandardRate: newSettings.gasStandardRate?.trim() || '7.23',
+        gasStandingCharge: newSettings.gasStandingCharge?.trim() || '29.10'
       };
 
       localStorage.setItem(STORAGE_KEYS.API_KEY, sanitized.apiKey || '');
@@ -114,6 +124,8 @@ export const OctopusProvider = ({ children }) => {
       localStorage.setItem(STORAGE_KEYS.OFF_PEAK_RATE, sanitized.offPeakRate);
       localStorage.setItem(STORAGE_KEYS.STANDARD_RATE, sanitized.standardRate);
       localStorage.setItem(STORAGE_KEYS.STANDING_CHARGE, sanitized.standingCharge);
+      localStorage.setItem(STORAGE_KEYS.GAS_STANDARD_RATE, sanitized.gasStandardRate);
+      localStorage.setItem(STORAGE_KEYS.GAS_STANDING_CHARGE, sanitized.gasStandingCharge);
 
       // Also persist combined JSON
       localStorage.setItem(STORAGE_KEYS.LEGACY_ALL, JSON.stringify(sanitized));
@@ -126,7 +138,7 @@ export const OctopusProvider = ({ children }) => {
           particleCount: 50,
           spread: 60,
           origin: { y: 0.85 },
-          colors: ['#00D2FF', '#00F0FF', '#38BDF8', '#10B981', '#FF9E0B']
+          colors: ['#00D2FF', '#FF6B00', '#FF8C00', '#10B981', '#FF9E0B']
         });
       } catch (e) {
         // ignore
@@ -152,6 +164,8 @@ export const OctopusProvider = ({ children }) => {
       localStorage.removeItem(STORAGE_KEYS.OFF_PEAK_RATE);
       localStorage.removeItem(STORAGE_KEYS.STANDARD_RATE);
       localStorage.removeItem(STORAGE_KEYS.STANDING_CHARGE);
+      localStorage.removeItem(STORAGE_KEYS.GAS_STANDARD_RATE);
+      localStorage.removeItem(STORAGE_KEYS.GAS_STANDING_CHARGE);
       localStorage.removeItem(STORAGE_KEYS.LEGACY_ALL);
 
       const defaultReset = {
@@ -162,7 +176,9 @@ export const OctopusProvider = ({ children }) => {
         gasSerial: '',
         offPeakRate: '4.99',
         standardRate: '27.05',
-        standingCharge: '56.6'
+        standingCharge: '56.6',
+        gasStandardRate: '7.23',
+        gasStandingCharge: '29.10'
       };
       setCredentials(defaultReset);
       showToast('Settings and credentials have been cleared.', 'info');

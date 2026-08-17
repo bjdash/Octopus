@@ -34,11 +34,11 @@ export const BottomNav = () => {
         <NavLink
           to="/gas"
           id="nav-gas"
-          className={`nav-item ${isGasActive ? 'active-cyan' : ''}`}
+          className={`nav-item ${isGasActive ? 'active-flame' : ''}`}
         >
           <Flame
             className="nav-icon"
-            color={isGasActive ? '#00F0FF' : 'currentColor'}
+            color={isGasActive ? '#FF6B00' : 'currentColor'}
             strokeWidth={isGasActive ? 2.5 : 2}
           />
           <span>Gas</span>
